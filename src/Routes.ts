@@ -27,7 +27,7 @@ export const publicRoutes = [
     },
     {
         component: User,
-        path: '/user/:id',
-        exact: true,
+        path: '/user/:userID',
+        exact: false,
     },
 ]

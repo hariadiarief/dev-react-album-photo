@@ -1,0 +1,23 @@
+.tableDashboard__navigations {
+    display: flex;
+    align-items: center;
+}
+
+.tableDashboard__navigation {
+    white-space: nowrap;
+    padding: 18px 50px;
+    color: rgba($color: #4F4F4F, $alpha: 0.3);
+    border-bottom: 5px solid transparent;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+    text-align: center;
+    letter-spacing: 0.342857px;
+    text-transform: uppercase;
+}
+
+.tableDashboard__navigation--active {
+    @extend .tableDashboard__navigation;
+    border-bottom: 5px solid #17948C;
+    color: #17948C !important;
+}

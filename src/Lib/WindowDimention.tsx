@@ -11,8 +11,6 @@ export default function WindowDimensions() {
         height: 0,
     })
 
-    console.log(windowSize)
-
     useEffect(() => {
         // Handler to call on window resize
         function handleResize() {

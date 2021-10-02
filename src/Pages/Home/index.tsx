@@ -2,16 +2,11 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import API from '../../API'
 
-export type AlbumType = {
+type AlbumType = {
     id: number
     title: string
     userId: number
     userName: string
-}
-
-export type UserType = {
-    id: number
-    title: string
 }
 
 export default function Home() {
@@ -58,7 +53,7 @@ export default function Home() {
                                 {album.title}
                             </Link>
                             <div className='home__grid__item__user'>
-                                <Link to={`/users/${album.userId}`}>{album.userName}</Link>
+                                <Link to={`/user/${album.userId}`}>{album.userName}</Link>
                             </div>
                         </div>
                     ))}
