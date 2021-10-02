@@ -1,6 +1,12 @@
-import { Fragment, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import Modal from 'react-modal'
+
 import API from '../../API'
+import { type } from 'os'
+
+const SHOW_MODAL_DETAIL = 1
+const SHOW_MODAL_COMMENT = 2
 
 type photoType = {
     albumId: number
@@ -10,10 +16,25 @@ type photoType = {
     thumbnailUrl: string
 }
 
+type modalType = {
+    type: number
+    selectedPhoto: photoType | null
+}
+
+let dummy = {
+    albumId: 2,
+    id: 51,
+    title: 'non sunt voluptatem placeat consequuntur rem incidunt',
+    url: 'https://via.placeholder.com/600/8e973b',
+    thumbnailUrl: 'https://via.placeholder.com/150/8e973b',
+}
+
 export default function Album() {
     const { albumId } = useParams<{ albumId: string }>()
     const [photos, setPhotos] = useState<Array<photoType>>()
     const [user, setUser] = useState<{ name: string; email: string; id: number }>()
+
+    const [whichModalShow, setWhichModalShow] = useState<modalType>({ type: 1, selectedPhoto: null })
 
     const fetchPhotosAlbum = () => {
         API.get(`photos?albumId=${albumId}`).then((response) => {
@@ -55,9 +76,18 @@ export default function Album() {
                 </div>
             )}
             {photos && (
-                <div className='album__grid '>
+                <div className='album__grid'>
                     {photos.map((photo) => (
-                        <div key={photo.id} className='album__grid__item'>
+                        <div
+                            key={photo.id}
+                            className='album__grid__item'
+                            onClick={() =>
+                                setWhichModalShow({
+                                    type: SHOW_MODAL_DETAIL,
+                                    selectedPhoto: photo,
+                                })
+                            }
+                        >
                             <img src={photo.thumbnailUrl} alt='' className='album__grid__item__thumbnail' />
                             <div className='album__grid__item__title' title={photo.title}>
                                 <span>{photo.title}</span>
@@ -66,6 +96,47 @@ export default function Album() {
                     ))}
                 </div>
             )}
+
+            <Modal
+                isOpen={whichModalShow.type !== 0 && whichModalShow.selectedPhoto !== null}
+                onRequestClose={() =>
+                    setWhichModalShow({
+                        type: 0,
+                        selectedPhoto: null,
+                    })
+                }
+                contentLabel='Modal Photo'
+                className='modal-container'
+                overlayClassName='moda-overley-center'
+            >
+                {photos && renderWhicModal()}
+            </Modal>
         </div>
     )
+
+    function renderWhicModal() {
+        switch (whichModalShow.type) {
+            case SHOW_MODAL_DETAIL:
+                return (
+                    <div className='container'>
+                        <div className='modal__detail'>
+                            <img src={whichModalShow.selectedPhoto?.url} alt='' />
+                            <div className='modal__detail__comment'>
+                                <form>
+                                    <label id='username'>User Name</label>
+                                    <input id='username' type='text' placeholder='Username' />
+                                    <label id='comment'>Comment</label>
+                                    <textarea name='' id='comment'></textarea>
+                                    <button>Send</button>
+                                </form>
+                                <hr />
+                                <div>no comments yet, be the first one</div>
+                            </div>
+                        </div>
+                    </div>
+                )
+            default:
+                break
+        }
+    }
 }
