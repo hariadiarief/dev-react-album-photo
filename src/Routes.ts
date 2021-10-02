@@ -22,7 +22,7 @@ export const publicRoutes = [
     },
     {
         component: Album,
-        path: '/album/:id',
+        path: '/album/:albumId',
         exact: true,
     },
     {
