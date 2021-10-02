@@ -1,6 +1,6 @@
 %layout-navigation__text {
     cursor: pointer;
-    color: #333333;
+    color: #616161;
     font-size: 16px;
     font-weight: 600;
     text-transform: capitalize;
@@ -12,14 +12,14 @@
     }
 
     &:hover {
-        color: #FF0000;
+        color: #0069FE;
     }
 }
 
 %layout-navigation__text--active {
     @extend %layout-navigation__text;
-    color: #FF0000;
-    border-bottom: 5px solid #ff000088;
+    color: #0069FE;
+    border-bottom: 5px solid #0069FE88;
 }
 
 $header-height: 45px;

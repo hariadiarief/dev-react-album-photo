@@ -2,6 +2,7 @@ import Home from './Pages/Home'
 import Favorite from './Pages/Favorite'
 import User from './Pages/User'
 import About from './Pages/About'
+import Album from './Pages/Album'
 
 export const publicRoutes = [
     {
@@ -17,6 +18,11 @@ export const publicRoutes = [
     {
         component: Favorite,
         path: '/favorite',
+        exact: true,
+    },
+    {
+        component: Album,
+        path: '/album/:id',
         exact: true,
     },
     {
