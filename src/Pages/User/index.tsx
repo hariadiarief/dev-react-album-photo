@@ -4,12 +4,12 @@ import API from '../../API'
 
 import TabAlbumList from './TabAlbumList'
 import TabUserDetail from './TabUserDetail'
-import { usersType } from './type'
+import { usersType, albumsType } from './type'
 
 export default function User() {
     const { userID } = useParams<{ userID: string }>()
     const [user, setUser] = useState<usersType>()
-    const [album, setAlbum] = useState<string[]>([])
+    const [albums, setAlbums] = useState<Array<albumsType>>()
 
     const fetchUserDetail = () => {
         API.get(`/users/${userID}`).then((response) => {
@@ -20,15 +20,15 @@ export default function User() {
 
         API.get(`/albums/?userId=${userID}`).then((response) => {
             if (response.status === 200) {
-                setAlbum(response.data)
+                setAlbums(response.data)
             }
         })
     }
     useEffect(() => {
-        if (!album.length && !user) {
+        if (!albums && !user) {
             fetchUserDetail()
         }
-    }, [user, album])
+    }, [user, albums])
 
     return (
         <div className='container'>
@@ -39,14 +39,14 @@ export default function User() {
                 </NavLink>
 
                 <NavLink className='tableDashboard__navigation' activeClassName='tableDashboard__navigation--active' exact to={`/user/${userID}/album`}>
-                    Album
+                    My Album
                 </NavLink>
             </div>
 
-            {user && album && (
+            {user && albums && (
                 <Switch>
                     <Route exact={true} path='/user/:userID' render={() => <TabUserDetail user={user} />} />
-                    <Route exact={true} path='/user/:userID/album' render={() => <TabAlbumList />} />
+                    <Route exact={true} path='/user/:userID/album' render={() => <TabAlbumList albums={albums} />} />
                 </Switch>
             )}
         </div>

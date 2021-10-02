@@ -21,3 +21,8 @@ export type usersType = {
         bs: string
     }
 }
+
+export type albumsType = {
+    id: number
+    title: string
+}
