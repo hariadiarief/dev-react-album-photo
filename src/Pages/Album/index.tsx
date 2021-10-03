@@ -3,7 +3,8 @@ import { Link, useParams } from 'react-router-dom'
 import Modal from 'react-modal'
 
 import API from '../../API'
-import { type } from 'os'
+
+import { ReactComponent as IconLoveFilled } from '../../Assets/love-filled.svg'
 
 const SHOW_MODAL_DETAIL = 1
 const SHOW_MODAL_COMMENT = 2
@@ -21,37 +22,37 @@ type modalType = {
     selectedPhoto: photoType | null
 }
 
-let dummy = {
-    albumId: 2,
-    id: 51,
-    title: 'non sunt voluptatem placeat consequuntur rem incidunt',
-    url: 'https://via.placeholder.com/600/8e973b',
-    thumbnailUrl: 'https://via.placeholder.com/150/8e973b',
+type favoriteType = {
+    albumId: number
+    id: number
+    title: string
+    url: string
+    thumbnailUrl: string
+    albumTitle: string
 }
 
 export default function Album() {
     const { albumId } = useParams<{ albumId: string }>()
     const [photos, setPhotos] = useState<Array<photoType>>()
     const [user, setUser] = useState<{ name: string; email: string; id: number }>()
+    const [album, setAlbum] = useState<{ title: string }>()
 
     const [whichModalShow, setWhichModalShow] = useState<modalType>({ type: 1, selectedPhoto: null })
+    const [favoritePhoto, setFavoritePhoto] = useState<Array<favoriteType> | []>(JSON.parse(localStorage.getItem('favoritePhoto') || '[]'))
 
     const fetchPhotosAlbum = () => {
         API.get(`photos?albumId=${albumId}`).then((response) => {
-            if (response.status === 200) {
-                setPhotos(response.data)
-            }
+            if (response.status === 200) setPhotos(response.data)
         })
     }
     useEffect(() => {
-        if (!photos) {
-            fetchPhotosAlbum()
-        }
+        if (!photos) fetchPhotosAlbum()
     }, [photos])
 
     const fetchUserFromAlbumId = () => {
         API.get(`/albums/${albumId}`).then((response) => {
             if (response.status === 200) {
+                setAlbum(response.data)
                 let { userId } = response.data
                 API.get(`/users/${userId}`).then((response) => {
                     setUser(response.data)
@@ -64,6 +65,19 @@ export default function Album() {
             fetchUserFromAlbumId()
         }
     }, [user])
+
+    const favoriteToggle = (parms: photoType) => {
+        let payload: any[] = JSON.parse(localStorage.getItem('favoritePhoto') || '[]')
+
+        if (payload.map((item) => item.id).includes(parms.id)) {
+            payload = payload.filter((item) => item.id !== parms.id)
+        } else {
+            payload.push({ ...parms, albumTitle: album?.title })
+        }
+
+        localStorage.setItem('favoritePhoto', JSON.stringify(payload))
+        setFavoritePhoto(payload)
+    }
 
     return (
         <div className='container'>
@@ -78,19 +92,15 @@ export default function Album() {
             {photos && (
                 <div className='album__grid'>
                     {photos.map((photo) => (
-                        <div
-                            key={photo.id}
-                            className='album__grid__item'
-                            onClick={() =>
-                                setWhichModalShow({
-                                    type: SHOW_MODAL_DETAIL,
-                                    selectedPhoto: photo,
-                                })
-                            }
-                        >
-                            <img src={photo.thumbnailUrl} alt='' className='album__grid__item__thumbnail' />
-                            <div className='album__grid__item__title' title={photo.title}>
-                                <span>{photo.title}</span>
+                        <div key={photo.id} className='album__grid__item'>
+                            <button className={`ablum__like`} onClick={() => favoriteToggle(photo)}>
+                                <IconLoveFilled className={`ablum__like__icon${favoritePhoto.map((item) => item.id).includes(photo.id) ? '--liked' : ''}`} />
+                            </button>
+                            <div onClick={() => setWhichModalShow({ type: SHOW_MODAL_DETAIL, selectedPhoto: photo })}>
+                                <img src={photo.thumbnailUrl} alt='' className='album__grid__item__thumbnail' />
+                                <div className='album__grid__item__title' title={photo.title}>
+                                    <span>{photo.title}</span>
+                                </div>
                             </div>
                         </div>
                     ))}

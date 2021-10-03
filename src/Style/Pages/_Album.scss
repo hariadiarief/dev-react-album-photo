@@ -27,6 +27,7 @@
     border-radius: 10px;
     min-height: 81px;
     cursor: pointer;
+    position: relative;
 
     &:hover {
         transition: .2s;
@@ -63,6 +64,47 @@
         }
 
     }
+}
+
+.ablum__like {
+    border: none;
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    position: absolute;
+    right: 12px;
+    top: 12px;
+
+    &__icon {
+        width: 28px;
+        height: 28px;
+
+        path {
+            fill: white;
+            stroke: #616161;
+        }
+
+        &:hover {
+            path {
+                fill: rgb(207, 47, 47);
+                stroke: white;
+            }
+        }
+
+        &--liked {
+            @extend .ablum__like__icon;
+
+            path {
+                fill: rgb(207, 47, 47);
+                stroke: white;
+            }
+        }
+    }
+
+
+
 }
 
 .modal__detail {
