@@ -31,6 +31,12 @@ type favoriteType = {
     albumTitle: string
 }
 
+type commentType = {
+    photoId: number
+    username: string
+    comment: string
+}
+
 export default function Album() {
     const { albumId } = useParams<{ albumId: string }>()
     const [photos, setPhotos] = useState<Array<photoType>>()
@@ -39,6 +45,11 @@ export default function Album() {
 
     const [whichModalShow, setWhichModalShow] = useState<modalType>({ type: 1, selectedPhoto: null })
     const [favoritePhoto, setFavoritePhoto] = useState<Array<favoriteType> | []>(JSON.parse(localStorage.getItem('favoritePhoto') || '[]'))
+    const [inputComment, setInputComment] = useState({
+        username: '',
+        comment: '',
+    })
+    const [comments, setComments] = useState<Array<commentType> | []>(JSON.parse(localStorage.getItem('comments') || '[]'))
 
     const fetchPhotosAlbum = () => {
         API.get(`photos?albumId=${albumId}`).then((response) => {
@@ -79,6 +90,20 @@ export default function Album() {
         setFavoritePhoto(payload)
     }
 
+    const addComent = (e: any) => {
+        e.preventDefault()
+        let payload: any[] = JSON.parse(localStorage.getItem('comments') || '[]')
+        let params = {
+            photoId: whichModalShow.selectedPhoto?.id,
+            ...inputComment,
+        }
+
+        payload.push({ ...params })
+        localStorage.setItem('comments', JSON.stringify(payload))
+        setInputComment({ comment: '', username: '' })
+        setComments(payload)
+    }
+
     return (
         <div className='container'>
             {user && (
@@ -109,12 +134,10 @@ export default function Album() {
 
             <Modal
                 isOpen={whichModalShow.type !== 0 && whichModalShow.selectedPhoto !== null}
-                onRequestClose={() =>
-                    setWhichModalShow({
-                        type: 0,
-                        selectedPhoto: null,
-                    })
-                }
+                onRequestClose={() => {
+                    setWhichModalShow({ type: 0, selectedPhoto: null })
+                    setInputComment({ comment: '', username: '' })
+                }}
                 contentLabel='Modal Photo'
                 className='modal-container'
                 overlayClassName='moda-overley-center'
@@ -132,15 +155,37 @@ export default function Album() {
                         <div className='modal__detail'>
                             <img src={whichModalShow.selectedPhoto?.url} alt='' />
                             <div className='modal__detail__comment'>
-                                <form>
+                                <form onSubmit={(e) => addComent(e)}>
                                     <label id='username'>User Name</label>
-                                    <input id='username' type='text' placeholder='Username' />
+                                    <input
+                                        id='username'
+                                        type='text'
+                                        placeholder='Username'
+                                        value={inputComment.username}
+                                        onChange={({ target: { value } }) => setInputComment((prevState) => ({ ...prevState, username: value }))}
+                                    />
                                     <label id='comment'>Comment</label>
-                                    <textarea name='' id='comment'></textarea>
+                                    <textarea
+                                        name=''
+                                        id='comment'
+                                        value={inputComment.comment}
+                                        onChange={({ target: { value } }) => setInputComment((prevState) => ({ ...prevState, comment: value }))}
+                                    ></textarea>
                                     <button>Send</button>
                                 </form>
                                 <hr />
-                                <div>no comments yet, be the first one</div>
+                                {comments.find((comment) => comment.photoId === whichModalShow.selectedPhoto?.id) ? (
+                                    comments
+                                        .filter((comment) => comment.photoId === whichModalShow.selectedPhoto?.id)
+                                        .map((item) => (
+                                            <div>
+                                                <b>{item.username}</b>
+                                                <div>{item.comment}</div>
+                                            </div>
+                                        ))
+                                ) : (
+                                    <div>no comments yet, be the first one</div>
+                                )}
                             </div>
                         </div>
                     </div>
