@@ -3,7 +3,7 @@ import { usersType } from './type'
 export default function TabUserDetail({ user }: { user: usersType }) {
     return (
         <div>
-            <table className='custom-table'>
+            <table className='custom-table table--overflow-y'>
                 <tbody>
                     <tr>
                         <td>User ID:</td>

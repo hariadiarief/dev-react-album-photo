@@ -1,7 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Modal from 'react-modal'
-import { ToastContainer, toast } from 'react-toastify'
-
 import { ReactComponent as IconLoveFilled } from '../../Assets/love-filled.svg'
 
 const SHOW_MODAL_DETAIL = 1
@@ -141,7 +139,6 @@ export default function Favorite() {
                     </div>
                 </div>
             </Modal>
-            <ToastContainer />
         </div>
     )
 }

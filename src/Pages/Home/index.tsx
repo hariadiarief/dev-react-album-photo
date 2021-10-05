@@ -68,11 +68,15 @@ export default function Home() {
 
     return (
         <div className='container'>
-            <div className='home__title' placeholder='search user name or album name'>
-                List of Albums
-            </div>
+            <div className='home__title'>List of Albums</div>
 
-            <input className='home__search' type='text' value={search} onChange={({ target: { value } }) => setSearch(value)} />
+            <input
+                className='home__search'
+                placeholder='search user name or album name'
+                type='text'
+                value={search}
+                onChange={({ target: { value } }) => setSearch(value)}
+            />
 
             {!filtreDalbums.length ? (
                 <div className='search--not-found'>
