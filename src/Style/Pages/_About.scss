@@ -1,0 +1,19 @@
+.about {
+    min-height: 50vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.about__link {
+    font-weight: 600;
+    font-size: 31px;
+    color: #616161;
+    text-align: center;
+    padding-top: 25px;
+    margin-top: 35px;
+
+    &:hover {
+        color: #0069FE;
+    }
+}
