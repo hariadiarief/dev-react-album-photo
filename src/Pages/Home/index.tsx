@@ -35,7 +35,7 @@ export default function Home() {
             .catch(() => toast.error('Network error, try letter'))
 
         await albums.forEach((album, index) => {
-            users.find((user) => {
+            users.forEach((user) => {
                 if (user.id === album.userId) Object.assign(albums[index], { ...album, userName: user.name })
             })
         })
