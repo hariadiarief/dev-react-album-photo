@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import Modal from 'react-modal'
+import { ToastContainer, toast } from 'react-toastify'
 
 import API from '../../API'
 
@@ -52,24 +53,28 @@ export default function Album() {
     const [comments, setComments] = useState<Array<commentType> | []>(JSON.parse(localStorage.getItem('comments') || '[]'))
 
     const fetchPhotosAlbum = () => {
-        API.get(`photos?albumId=${albumId}`).then((response) => {
-            if (response.status === 200) setPhotos(response.data)
-        })
+        API.get(`photos?albumId=${albumId}`)
+            .then((response) => {
+                if (response.status === 200) setPhotos(response.data)
+            })
+            .catch(() => toast.error('Network error, try letter'))
     }
     useEffect(() => {
         if (!photos) fetchPhotosAlbum()
     }, [photos])
 
     const fetchUserFromAlbumId = () => {
-        API.get(`/albums/${albumId}`).then((response) => {
-            if (response.status === 200) {
-                setAlbum(response.data)
-                let { userId } = response.data
-                API.get(`/users/${userId}`).then((response) => {
-                    setUser(response.data)
-                })
-            }
-        })
+        API.get(`/albums/${albumId}`)
+            .then((response) => {
+                if (response.status === 200) {
+                    setAlbum(response.data)
+                    let { userId } = response.data
+                    API.get(`/users/${userId}`).then((response) => {
+                        setUser(response.data)
+                    })
+                }
+            })
+            .catch(() => toast.error('Network error, try letter'))
     }
     useEffect(() => {
         if (!user) {
@@ -144,6 +149,7 @@ export default function Album() {
             >
                 {photos && renderWhicModal()}
             </Modal>
+            <ToastContainer />
         </div>
     )
 

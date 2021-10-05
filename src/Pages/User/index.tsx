@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, Switch, Route, NavLink } from 'react-router-dom'
 import API from '../../API'
+import { ToastContainer, toast } from 'react-toastify'
 
 import TabAlbumList from './TabAlbumList'
 import TabUserDetail from './TabUserDetail'
@@ -12,17 +13,21 @@ export default function User() {
     const [albums, setAlbums] = useState<Array<albumsType>>()
 
     const fetchUserDetail = () => {
-        API.get(`/users/${userID}`).then((response) => {
-            if (response.status === 200) {
-                setUser(response.data)
-            }
-        })
+        API.get(`/users/${userID}`)
+            .then((response) => {
+                if (response.status === 200) {
+                    setUser(response.data)
+                }
+            })
+            .catch(() => toast.error('Network error, try letter'))
 
-        API.get(`/albums/?userId=${userID}`).then((response) => {
-            if (response.status === 200) {
-                setAlbums(response.data)
-            }
-        })
+        API.get(`/albums/?userId=${userID}`)
+            .then((response) => {
+                if (response.status === 200) {
+                    setAlbums(response.data)
+                }
+            })
+            .catch(() => toast.error('Network error, try letter'))
     }
     useEffect(() => {
         if (!albums && !user) {
@@ -49,6 +54,7 @@ export default function User() {
                     <Route exact={true} path='/user/:userID/album' render={() => <TabAlbumList albums={albums} />} />
                 </Switch>
             )}
+            <ToastContainer />
         </div>
     )
 }

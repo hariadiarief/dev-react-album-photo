@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { isMetaProperty } from 'typescript'
 import API from '../../API'
+import { ToastContainer, toast } from 'react-toastify'
 
 type AlbumType = {
     id: number
@@ -16,22 +16,23 @@ export default function Home() {
     const [search, setSearch] = useState('')
 
     const fetchAlbum = async () => {
-        console.log('fetchAlbum')
-
         let albums: any[] = []
         let users: any[] = []
+        await API.get(`/albums`)
+            .then((response) => {
+                if (response.status === 200) {
+                    albums = response.data
+                }
+            })
+            .catch(() => toast.error('Network error, try letter'))
 
-        await API.get(`/albums`).then((response) => {
-            if (response.status === 200) {
-                albums = response.data
-            }
-        })
-
-        await API.get(`/users`).then((response) => {
-            if (response.status === 200) {
-                users = response.data
-            }
-        })
+        await API.get(`/users`)
+            .then((response) => {
+                if (response.status === 200) {
+                    users = response.data
+                }
+            })
+            .catch(() => toast.error('Network error, try letter'))
 
         await albums.forEach((album, index) => {
             users.find((user) => {
@@ -93,6 +94,7 @@ export default function Home() {
                     ))}
                 </div>
             )}
+            <ToastContainer />
         </div>
     )
 }
