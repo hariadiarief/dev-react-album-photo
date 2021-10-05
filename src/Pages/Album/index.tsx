@@ -8,7 +8,6 @@ import API from '../../API'
 import { ReactComponent as IconLoveFilled } from '../../Assets/love-filled.svg'
 
 const SHOW_MODAL_DETAIL = 1
-const SHOW_MODAL_COMMENT = 2
 
 type photoType = {
     albumId: number
@@ -147,57 +146,46 @@ export default function Album() {
                 className='modal-container'
                 overlayClassName='moda-overley-center'
             >
-                {photos && renderWhicModal()}
+                <div className='container'>
+                    <div className='modal__detail'>
+                        <img src={whichModalShow.selectedPhoto?.url} alt='' />
+                        <div className='modal__detail__comment'>
+                            <form onSubmit={(e) => addComent(e)}>
+                                <label id='username'>User Name</label>
+                                <input
+                                    id='username'
+                                    type='text'
+                                    placeholder='Username'
+                                    value={inputComment.username}
+                                    onChange={({ target: { value } }) => setInputComment((prevState) => ({ ...prevState, username: value }))}
+                                />
+                                <label id='comment'>Comment</label>
+                                <textarea
+                                    name=''
+                                    id='comment'
+                                    value={inputComment.comment}
+                                    onChange={({ target: { value } }) => setInputComment((prevState) => ({ ...prevState, comment: value }))}
+                                ></textarea>
+                                <button>Send</button>
+                            </form>
+                            <hr />
+                            {comments.find((comment) => comment.photoId === whichModalShow.selectedPhoto?.id) ? (
+                                comments
+                                    .filter((comment) => comment.photoId === whichModalShow.selectedPhoto?.id)
+                                    .map((item) => (
+                                        <div className='modal__detail__comment__item'>
+                                            <b>{item.username}</b>
+                                            <div>{item.comment}</div>
+                                        </div>
+                                    ))
+                            ) : (
+                                <div>no comments yet, be the first one</div>
+                            )}
+                        </div>
+                    </div>
+                </div>
             </Modal>
             <ToastContainer />
         </div>
     )
-
-    function renderWhicModal() {
-        switch (whichModalShow.type) {
-            case SHOW_MODAL_DETAIL:
-                return (
-                    <div className='container'>
-                        <div className='modal__detail'>
-                            <img src={whichModalShow.selectedPhoto?.url} alt='' />
-                            <div className='modal__detail__comment'>
-                                <form onSubmit={(e) => addComent(e)}>
-                                    <label id='username'>User Name</label>
-                                    <input
-                                        id='username'
-                                        type='text'
-                                        placeholder='Username'
-                                        value={inputComment.username}
-                                        onChange={({ target: { value } }) => setInputComment((prevState) => ({ ...prevState, username: value }))}
-                                    />
-                                    <label id='comment'>Comment</label>
-                                    <textarea
-                                        name=''
-                                        id='comment'
-                                        value={inputComment.comment}
-                                        onChange={({ target: { value } }) => setInputComment((prevState) => ({ ...prevState, comment: value }))}
-                                    ></textarea>
-                                    <button>Send</button>
-                                </form>
-                                <hr />
-                                {comments.find((comment) => comment.photoId === whichModalShow.selectedPhoto?.id) ? (
-                                    comments
-                                        .filter((comment) => comment.photoId === whichModalShow.selectedPhoto?.id)
-                                        .map((item) => (
-                                            <div className='modal__detail__comment__item'>
-                                                <b>{item.username}</b>
-                                                <div>{item.comment}</div>
-                                            </div>
-                                        ))
-                                ) : (
-                                    <div>no comments yet, be the first one</div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                )
-            default:
-                break
-        }
-    }
 }

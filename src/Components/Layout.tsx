@@ -34,6 +34,9 @@ export default function Layout({ children }: { children: JSX.Element }) {
                     <NavLink to='/' exact className='layout__header__navigation' activeClassName='layout__header__navigation--active'>
                         Home
                     </NavLink>
+                    <NavLink to='/favorite' exact className='layout__header__navigation' activeClassName='layout__header__navigation--active'>
+                        Favorite
+                    </NavLink>
                     <NavLink to='/about' className='layout__header__navigation' activeClassName='layout__header__navigation--active'>
                         About
                     </NavLink>
