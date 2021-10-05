@@ -78,7 +78,11 @@ export default function Home() {
                 onChange={({ target: { value } }) => setSearch(value)}
             />
 
-            {!filtreDalbums.length ? (
+            {!albums.length ? (
+                <div className='search--not-found'>
+                    <span>Loading...</span>
+                </div>
+            ) : !filtreDalbums.length ? (
                 <div className='search--not-found'>
                     <span>Sorry</span>
                     <span>No Results Found.</span>
