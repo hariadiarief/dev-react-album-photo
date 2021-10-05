@@ -69,8 +69,7 @@ export default function Favorite() {
             {!favoritePhoto.length ? (
                 <div className='search--not-found'>
                     <span>Sorry</span>
-                    <span>No Results Found.</span>
-                    <span>Please try another search</span>
+                    <span>No Favorit Found.</span>
                 </div>
             ) : (
                 <div className='album__grid'>
