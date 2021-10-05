@@ -178,7 +178,7 @@ export default function Album() {
                                     comments
                                         .filter((comment) => comment.photoId === whichModalShow.selectedPhoto?.id)
                                         .map((item) => (
-                                            <div>
+                                            <div className='modal__detail__comment__item'>
                                                 <b>{item.username}</b>
                                                 <div>{item.comment}</div>
                                             </div>

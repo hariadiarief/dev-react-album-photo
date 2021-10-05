@@ -58,3 +58,19 @@
         }
     }
 }
+
+.home__search {
+    width: 100%;
+    margin: 25px;
+    border-radius: 9px;
+    border: 1px solid #17948C;
+    padding: 8px 12px;
+}
+
+.search--not-found {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    align-items: center;
+}
